@@ -62,9 +62,72 @@ const getAnimalImages = async (req) => {
   return animalImages;
 };
 
+const createAnimalInDatabase = async (newAttributes) => {
+  const {
+    name,
+    sex,
+    birthday,
+    color,
+    race,
+    vaccine,
+    tatoo,
+    health1,
+    health2,
+    temper1,
+    temper2,
+    temper3,
+    temper4,
+  } = newAttributes;
+
+  console.log('new attributes', newAttributes);
+  const adoptionDepositDate = new Date(Date.now());
+
+  function getAge(date) {
+    const newDate = new Date(date);
+    const diff = Date.now() - newDate.getTime();
+    const age = new Date(diff);
+
+    console.log('dateNow', Date.now());
+    console.log('date.getTime', newDate.getTime());
+
+    return Math.abs(age.getUTCFullYear() - 1970);
+  }
+  const age = getAge(birthday);
+
+  let medical = 'Sans';
+  if (temper1 || temper2) {
+    medical = 'Avec';
+  }
+
+  const res = await db.query(
+    'INSERT INTO animals (name, sex, birthday, age, color, race, vaccine, tatoo, health1, health2, medical, temper1, temper2, temper3, temper4, adoptionDepositDate ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )',
+    [
+      name,
+      sex,
+      birthday,
+      age,
+      color,
+      race,
+      vaccine,
+      tatoo,
+      health1,
+      health2,
+      medical,
+      temper1,
+      temper2,
+      temper3,
+      temper4,
+      adoptionDepositDate,
+    ]
+  );
+
+  return { name, id: res.insertId };
+};
+
 module.exports = {
   getAllAnimals,
   getAllAnimalsFiltered,
   getAnimalImages,
   getOneAnimalById,
+  createAnimalInDatabase,
 };

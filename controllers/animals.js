@@ -21,3 +21,8 @@ module.exports.getAnimalImages = async (req, res) => {
   const images = await Animals.getAnimalImages(req);
   return res.status(201).send(images);
 };
+
+module.exports.addAnimal = async (req, res) => {
+  const animal = await Animals.createAnimalInDatabase(req.body);
+  return res.status(201).send(animal);
+};
