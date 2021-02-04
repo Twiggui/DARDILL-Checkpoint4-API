@@ -3,7 +3,9 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const session = require('express-session');
+const path = require('path');
 const sessionStore = require('./sessionStore');
+
 const {
   inTestEnv,
   inProdEnv,
@@ -50,6 +52,10 @@ app.use(
     saveUninitialized: false,
     cookie: { sameSite: true, secure: inProdEnv },
   })
+);
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, 'file-storage/public/cat-profil-images'))
 );
 
 // routes
